@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background</title>
+    <link rel="icon" href="../image/所有图（除design头图）/community图标.png" type="image/png">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5 url('../image/所有图（除design头图）/background背景横版.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* 背景叠加层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 245, 245, 0.60);
+            z-index: -1;
+        }
+        
+        /* 网站头部 */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 85px;
+            overflow: visible;      /* 关键：允许伪元素超出 */
+            color: white;
+            z-index: 1000;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+        .site-header::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 200px;          /* 比容器 85px 高，就能上下超出 */
+    transform: translate(-50%, -50%);
+    background-image: url('../image/所有图（除design头图）/导航栏.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;            /* 放到内容下面 */
+    pointer-events: none;   /* 不挡点击 */
+}
+
+        .site-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #64ffda;
+        }
+        
+        .site-nav {
+            display: flex;
+            gap: 25px;
+            position: relative;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: rgba(8, 0, 0, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 15px;
+            transition: all 0.3s;
+            height: 70px;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover {
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+        }
+        
+        .nav-link.has-dropdown::after {
+            content: '▾';
+            margin-left: 5px;
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .nav-item:hover .nav-link.has-dropdown::after {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-menu a:hover {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding-left: 25px;
+        }
+        
+        #experiments .dropdown-menu { min-width: 220px; }
+        #projects .dropdown-menu { min-width: 180px; }
+        #team .dropdown-menu { min-width: 160px; }
+        #publications .dropdown-menu { min-width: 200px; }
+        
+        /* 英雄区域 */
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0px;
+           
+        }
+
+        .sun-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:url('../image/头图/bk头图.jpg')center 90%/cover no-repeat;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 3rem;
+            text-shadow: 0.2rem 0.2rem 0.8rem rgba(0, 0, 0, 0.8);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 4rem;
+            animation: bounce 2s infinite;
+            z-index: 3;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-2rem); }
+            60% { transform: translateX(-50%) translateY(-1rem); }
+        }        
+/* 侧边栏优化 - 按钮样式 */
+.sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    background: url('../image/所有图（除design头图）/background侧面导航栏2 (1).png') right top/100% no-repeat;
+    padding: 30px 0;
+    position: sticky;
+    top: 100px;
+    overflow: visible;}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding:  5px 0 20px 0;
+    transform: translateY(-12px);     /* 整个导航列表上移15px */
+}
+
+.sidebar-nav li {
+    margin: 25px 15px; /* 增加间距，让按钮更明显 */
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 0;
+    color: #444;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: auto;
+    max-width: 160px;
+    margin: 5px 0 0 95px;   
+}
+
+.sidebar-nav a:hover {
+    background: transparent;
+    color: #1a237e;
+    border: none;                      /* 去掉边框 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+}
+
+.sidebar-nav a.active {
+    background: transparent;
+    color: #1a237e;
+    border: none;                      /* 去掉边框 */
+    box-shadow: 0 4px 12px rgba(255, 145, 0, 0.3);
+}
+         /* === 重新设计的主内容区域 === */
+        .main-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            gap: 30px;
+            position: relative;
+            align-items: stretch;   /* 默认，显式写出 */
+            z-index: 5;
+        }
+        /* 主内容区域优化 */
+        .content-main {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+             min-width: 0;
+    max-height: 80vh;
+    overflow-y: auto;
+        }
+        
+        /* 内容样式优化 */
+        .content-section {
+            margin-top: 40px;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff9100, #ffd700);
+            border-radius: 2px;
+        }
+        
+        .section-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+         /* 视频容器 */
+        .video-container {
+            width: 100%;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 宽高比 */
+        }
+        
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-controls {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #ff9100;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+        
+        .time-display {
+            color: white;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 145, 0, 0.3);
+        }
+        /* 图片表格优化 */
+                /* 图片容器优化 */
+        .img-div {
+            width: 100%;
+            padding-left: 2vw;
+            padding-right: 2vw;
+            min-height: auto;
+            height: auto;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 40px 0 20px 0;
+            justify-content: center;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+        }
+        
+        .img {
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100%;
+            height: auto;
+            min-height: 300px;
+            margin-bottom: 15px;
+        }
+        
+        .img-div div[style*="text-align: center"] {
+            text-align: center;
+            justify-content: center;
+            align-self: flex-start;
+            display: flex;
+            position: relative;
+            width: 100%;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #eef2f6;
+        }
+        
+        .img-div div[style*="text-align: center"] h {
+            position: center;
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* 引用样式 */
+        .reference {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #666;
+            border-left: 4px solid #ff9100;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .home1 {
+                font-size: 8rem;
+            }
+            
+            .home2 {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .home1 {
+                font-size: 5rem;
+            }
+            
+            .home2 {
+                font-size: 2rem;
+            }
+        }
+        
+        footer {
+            background:url("../image/所有图（除design头图）/底部.png");
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+    <!-- 添加Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="star-background" id="starBackground"></div>
+    
+    <header class="site-header">
+        <div class="site-logo">SynthImmunol NMU</div>
+       <nav class="site-nav">
+             <div class="nav-item" id="home">
+                    <a href="C:\Users\25233\Desktop\idec\home\home.html" class="nav-link">Home</a>
+                </div>
+                
+                <div class="nav-item" id="experiments">
+                    <a href="#experiments" class="nav-link has-dropdown">Project</a>
+                    <div class="dropdown-menu">
+                        <a href="C:\Users\25233\Desktop\idec\background\background.html">Background</a>
+                        <a href="C:\Users\25233\Desktop\idec\design\design.html">Design</a>
+                        <a href="C:\Users\25233\Desktop\idec\result\result.html">Result</a>
+                        <a href="#flow-cytometry">Report</a>
+                        <a href="#data-analysis">Supplement</a>
+                    </div>
+                </div>
+                
+                <div class="nav-item" id="projects">
+                    <a href="#projects" class="nav-link has-dropdown">Documents</a>
+                    <div class="dropdown-menu">
+                        <a href="C:\Users\25233\Desktop\idec\notebook\notebook.html">Lab notebook</a>
+                        <a href="C:\Users\25233\Desktop\idec\protocol\protocol.html">Protocols</a>  
+                    </div>
+                </div>
+                 <div class="nav-item" id="publications">
+                    <a href="#publications" class="nav-link has-dropdown">ML-Model</a>
+                </div>
+                <div class="nav-item" id="team">
+                    <a href="#team" class="nav-link has-dropdown">Team</a>
+                    <div class="dropdown-menu">
+                        <a href="C:\Users\25233\Desktop\idec\member\member1.html">Member</a>
+                        <a href="C:\Users\25233\Desktop\idec\Community\Community.html">Community</a>
+                    </div>
+                </div>
+                
+               
+            </nav>
+    </header>
+
+    <section class="hero">
+        <div class="sun-background"></div>
+        <div class="hero-content">
+           
+        </div>
+        <div class="scroll-indicator">Explore more <i class="fas fa-chevron-down"></i></div>
+    </section>
+
+    <!-- 重新设计的主内容区域 -->
+    <div class="main-wrapper">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#preface" class="active">Preface</a></li>
+                    <li><a href="#denovo">Denovo</a></li>
+                    <li><a href="#bcell">B cell</a></li>
+                    <li><a href="#AID">AID</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-main">
+            <!-- 视频区域 -->
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video id="video">
+                       <source src="video1.mp4" type="video/mp4"> 
+                    </video>
+                </div>
+                <div class="video-controls">
+                    <button class="control-btn" id="playPause"><i class="fas fa-play"></i></button>
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                    <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                    <button class="control-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                </div>
+            </div>
+            <!-- 内容区域 -->
+            <div class="content-section">
+                <h2 class="section-title" id="preface">Preface</h2>
+                <p class="section-text">
+                   炎症是机体应对感染和组织损伤的重要防御反应，其强度和持续时间受到免疫系统的严格调控。多种细胞因子既参与宿主防御、组织修复和免疫稳态维持，又可在持续产生或异常激活时驱动慢性炎症和组织损伤。因此，炎症调控并不只是降低某一种炎症介质的水平，更重要的是区分同一分子介导的生理性和病理性信号，并选择性削弱疾病相关的信号输出。白细胞介素-6（interleukin-6, IL-6）正是这种功能分化最为典型的细胞因子之一。IL-6通过两种不同的信号方式发挥作用，其中，经典信号（classical signalling）依赖膜结合型IL-6受体α（membrane-bound IL-6 receptor α, mIL-6Rα），主要存在于少数免疫细胞和肝细胞等特定细胞群中；而反式信号（trans-signalling）则通过IL-6与可溶性IL-6Rα（soluble IL-6 receptor α, sIL-6Rα）形成复合物后募集广泛表达的gp130，从而突破mIL-6Rα表达范围的限制，将IL-6应答扩展至更多细胞类型，并参与炎症细胞募集、血管内皮激活、纤维化及慢性炎症的维持和放大1。经典信号与反式信号在作用细胞和生物学效应上的差异，使选择性调控IL-6的不同信号模式成为控制炎症而保留其生理功能的重要切入点。这一特征决定了对IL-6信号通路的干预不能简单等同于阻断IL-6本身。现有靶向IL-6或IL-6R的阻断策略，例如抗IL-6R单克隆抗体托珠单抗可阻断IL-6与mIL-6R以及sIL-6R结合，因此同时影响经典信号和反式信号2。，继而在抑制病理炎症的同时，也削弱经典IL-6信号参与的生理功能。相比之下，选择性靶向IL-6反式信号有望将炎症放大回路与基础免疫稳态相分离。机制上，IL-6反式信号具有一个可以被选择性识别的结构基础：IL-6与sIL-6Rα结合后形成复合物，并共同构成gp130识别所需的结合表面；随后gp130的募集和二聚化启动JAK/STAT等下游信号3。因此，如果能够直接识别IL-6/sIL-6Rα复合物，并阻断其与gp130结合，就可以在不直接靶向游离IL-6或mIL-6Rα的情况下抑制反式信号。这一策略的关键在于获得能够区分复合物与其游离组分，且对复合物具有足够亲和力以竞争gp130结合的结合分子。
+                </p>
+
+                <!-- 图片网格1 -->
+                <div class="image-div">
+                    <img src="../image/wiki绘图/gp130.png" style="width: 100%; border-radius: 12px;">
+                </div>
+
+                <h2 class="section-title" id="denovo">Denovo</h2>
+                <p class="section-text">
+                   从头蛋白质设计的发展使针对预定义三维表面的结合蛋白设计成为可能。基于结构生成和序列优化的计算方法能够围绕特定靶表面构建新的蛋白骨架，为识别蛋白质复合物形成后出现的结构表位提供了新的技术基础。然而，从头设计得到的候选分子通常只是功能优化的起点。静态结构上的界面互补并不能完全预测实际生物环境中的结合亲和力、复合物选择性以及对天然受体的竞争能力；同时，人工设计蛋白还必须满足折叠、表达、稳定性和细胞环境适应性等多重约束。因此，在计算设计获得初始骨架后，仍需要一种能够持续产生序列多样性，并在哺乳动物细胞环境中接受功能选择的进化体系，使候选分子进一步跨越由结构可行性到生物学功能之间的差距4。
+                </p>
+
+                <!-- 图片网格1 -->
+                <div class="image-div">
+                    <img src="../image/wiki绘图/denovo.jpg" style="width: 100%; border-radius: 12px;">
+                </div>
+
+                <h2 class="section-title"id="bcell">B cell</h2>
+                <p class="section-text">
+                   B细胞天然的体细胞高频突变（somatic hypermutation，SHM）及其驱动的抗体亲和力成熟，是适应性免疫中经典的分子进化过程。
+                </p>
+
+                <!-- 图片网格1 -->
+                <div class="image-div">
+                    <img src="../image/wiki绘图/B细胞高频突变发展史 袁馨茹.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <div class="image-div">
+                    <img src="../image/wiki绘图/B细胞高频突变示意图 邓哲元.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <h2 class="section-title"id="AID">AID</h2>
+                <p class="section-text">
+                   生发中心反应中，激活诱导的胞嘧啶脱氨酶（activation-induced cytidine deaminase，AID）在免疫球蛋白可变区持续引入高频突变，产生具有不同抗原结合能力的B细胞克隆，随后通过抗原依赖的选择和克隆扩增逐步富集高亲和力变体。该过程将序列多样化、功能选择和克隆扩增连续耦联于哺乳动物细胞中，为人工蛋白的定向进化提供了天然的免疫学基础5。因此，将这一经典的B细胞抗体进化机制重新定向至人工设计序列，有望进一步优化从头设计蛋白的亲和力和功能。
+                </p>
+
+                <!-- 图片网格1 -->
+                <div class="image-div">
+                    <img src="../image/wiki绘图/AID 王雨萱.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <div class="image-div">
+                    <img src="../image/wiki绘图/high affinity.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <div class="image-div">
+                    <img src="../image/wiki绘图/low affinity.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <div class="image-div">
+                    <img src="../image/wiki绘图/low_high affinity.png" style="width: 100%; border-radius: 12px;">
+                </div>
+                <!-- 引用区域 -->
+                <div class="reference">
+                    <i class="fas fa-quote-left" style="color: #ff9100; margin-right: 10px;"></i>
+                    <strong>References:</strong>  
+                    <li>Wang, M. J. et al. The double-edged effects of IL-6 in liver regeneration, aging, inflammation, and diseases. <em>Exp Hematol Oncol</em> <strong>13</strong>, 62 (2024). https://doi.org/10.1186/s40164-024-00527-1</li>
+                    <li>Wang, M. et al. Structural insights into IL-6 signaling inhibition by therapeutic antibodies. <em>Cell Rep</em> <strong>43</strong>, 113819 (2024). https://doi.org/10.1016/j.celrep.2024.113819</li>
+                    <li>Boulanger, M. J., Chow, D. C., Brevnova, E. E. &amp; Garcia, K. C. Hexameric structure and assembly of the interleukin-6/IL-6 alpha-receptor/gp130 complex. <em>Science</em> <strong>300</strong>, 2101-2104 (2003). https://doi.org/10.1126/science.1083901</li>
+                    <li>Cao, L. et al. Design of protein-binding proteins from the target structure alone. <em>Nature</em> <strong>605</strong>, 551-560 (2022). https://doi.org/10.1038/s41586-022-04654-9</li>
+                    <li>Turner, J. S. et al. Human germinal centres engage memory and naive B cells after influenza vaccination. <em>Nature</em> <strong>586</strong>, 127-132 (2020). https://doi.org/10.1038/s41586-020-2711-0</li>
+                    <li>Hess, G. T. et al. Directed evolution using dCas9-targeted somatic hypermutation in mammalian cells. <em>Nat Methods</em> <strong>13</strong>, 1036-1042 (2016). https://doi.org/10.1038/nmeth.4038</li>
+                    <li>Ma, Y. et al. Targeted AID-mediated mutagenesis (TAM) enables efficient genomic diversification in mammalian cells. <em>Nat Methods</em> <strong>13</strong>, 1029-1035 (2016). https://doi.org/10.1038/nmeth.4027</li>
+</ol>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            <i class="far fa-copyright"></i> 2025 SynthImmunol NMU. All rights reserved.
+        </div>
+    </footer>
+
+      <script>
+const video = document.getElementById('video');
+const playBtn = document.getElementById('playPause');
+const muteBtn = document.getElementById('muteBtn');
+const progressBar = document.getElementById('progressBar');
+const progressContainer = document.getElementById('progressContainer');
+const timeDisplay = document.getElementById('timeDisplay');
+
+// 播放 / 暂停
+playBtn.addEventListener('click', () => {
+    if (video.paused) {
+        video.play();
+        playBtn.querySelector('i').className = 'fas fa-pause';
+    } else {
+        video.pause();
+        playBtn.querySelector('i').className = 'fas fa-play';
+    }
+});
+
+// 静音
+muteBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    muteBtn.querySelector('i').className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+});
+
+// 进度更新
+video.addEventListener('timeupdate', () => {
+    const percent = (video.currentTime / video.duration) * 100 || 0;
+    progressBar.style.width = percent + '%';
+    timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+});
+
+// 点击进度条跳转
+progressContainer.addEventListener('click', (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    video.currentTime = ratio * video.duration;
+});
+
+function formatTime(sec) {
+    if (isNaN(sec)) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+    </script>
+</body>
+</html>
